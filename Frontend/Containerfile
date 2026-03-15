@@ -1,0 +1,29 @@
+FROM node:20-bookworm-slim
+
+WORKDIR /opt/app
+
+# Safer npm defaults at build and runtime.
+ENV npm_config_ignore_scripts=true \
+    npm_config_audit=false \
+    npm_config_fund=false \
+    npm_config_update_notifier=false
+
+# Install dependencies as a non-root user into the image.
+COPY package.json package-lock.json ./
+RUN chown -R node:node /opt/app
+USER node
+RUN npm ci --ignore-scripts --no-audit --no-fund
+
+COPY --chown=node:node . .
+
+ENV VITE_CACHE_DIR=/tmp/vite \
+    XDG_CACHE_HOME=/tmp/.cache \
+    NPM_CONFIG_CACHE=/tmp/.npm \
+    HOME=/tmp
+
+USER root
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 0755 /usr/local/bin/entrypoint.sh
+USER node
+
+CMD ["/usr/local/bin/entrypoint.sh"]
