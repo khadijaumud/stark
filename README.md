@@ -95,6 +95,7 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+pip install "bcrypt==4.0.1"
 
 # (Optional) Seed demo data
 python seed_data.py
