@@ -1,0 +1,21 @@
+{
+  "name": "Stark-Hackathon-Sandbox",
+  "dockerComposeFile": "../docker-compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/opt/app",
+  "workspaceMount": "source=stark-unused,target=/workspaces/unused,type=volume",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "tamasfe.even-better-toml",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "remoteUser": "node"
+}

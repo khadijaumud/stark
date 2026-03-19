@@ -1,0 +1,11 @@
+.git
+.devcontainer
+node_modules
+dist
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+Dockerfile
+Containerfile
+docker-compose.yaml
+.DS_Store

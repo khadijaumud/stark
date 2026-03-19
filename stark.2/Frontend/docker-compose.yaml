@@ -1,0 +1,71 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: stark-bounty-dev
+    profiles:
+      - secure
+    read_only: true
+    network_mode: "none"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,size=2g
+      - /run:rw,noexec,nosuid,size=8m
+      - /var/tmp:rw,noexec,nosuid,size=16m
+    user: "node"
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: "1.0"
+    ulimits:
+      nofile: 2048
+      nproc: 512
+    init: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true # Extra help for Next.js/Vite on Fedora
+      - VITE_CACHE_DIR=/tmp/vite
+      - XDG_CACHE_HOME=/tmp/.cache
+      - NPM_CONFIG_CACHE=/tmp/.npm
+      - HOME=/tmp
+  app-dev:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: stark-bounty-dev-ro
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,size=2g
+      - /run:rw,noexec,nosuid,size=8m
+      - /var/tmp:rw,noexec,nosuid,size=16m
+    user: "node"
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: "1.0"
+    ulimits:
+      nofile: 2048
+      nproc: 512
+    init: true
+    working_dir: /work
+    volumes:
+      - .:/work:ro,Z
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true # Extra help for Next.js/Vite on Fedora
+      - VITE_CACHE_DIR=/tmp/vite
+      - XDG_CACHE_HOME=/tmp/.cache
+      - NPM_CONFIG_CACHE=/tmp/.npm
+      - HOME=/tmp
+      - DEV_MODE=1
+    profiles:
+      - dev
